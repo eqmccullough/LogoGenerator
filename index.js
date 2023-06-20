@@ -1,8 +1,7 @@
+const { readFile, writeFile } = require('fs/promises');
 const inquirer = require('inquirer');
 const fs = require('fs');
-const shape = require('./lib/shapes.js');
-
-
+const {triangle,square, circle} = require('./lib/shapes');
 
 inquirer
   .prompt([
@@ -29,114 +28,51 @@ inquirer
     },
   ])
   .then((data) => {
-    const filename = `${data.characters.toLowerCase().split(' ').join('')}.json`;
 
-    var tColor = (`${data.textColor}`);
-    var sColor = (`${data.shapeColor}`);
-    var txt = (`${data.characters}`);
-    var shpe = (`${data.shape}`);
-    console.log(sColor);
+    fs.writeFile("package.json", JSON.stringify(data, null, '\t'), (err) =>
+    err ? console.log(err) : console.log('Success!')
+  );
+  })
 
-    if (shpe == "circle") {
-        fs.writeFile("logo.svg", circleSvg(txt,tColor,sColor), (err) =>
-        err ? console.log(err) : console.log('Generated logo.svg'));
-    } else if (shpe == "square") {
-        fs.writeFile("logo.svg", squareSvg(txt,tColor,sColor), (err) =>
-        err ? console.log(err) : console.log('Generated logo.svg'));
-    } else if (shpe == "triangle") {
-        fs.writeFile("logo.svg", triangleSvg(txt,tColor,sColor), (err) =>
-        err ? console.log(err) : console.log('Generated logo.svg'));
-    } else {}
-
-    
-  });
-
-
-
-
-
-readFile('./package.json', 'utf-8')
+  .then(() => {
+    readFile('./package.json', 'utf-8')
 .then((json) => {
     const shapeData = JSON.parse(json);
-    const post = new logo(
-      blogData.title,
-      blogData.text,
-      blogData.author,
-      blogData.createdOn
+    // console.log(shapeData);
+
+    if (shapeData.shape == "circle") {
+        const newShape = new circle(
+      shapeData.characters,
+      shapeData.textColor,
+      shapeData.shapeColor,
     );
-    const html = post.render();
+    const svg = newShape.renderCirc();
+    return writeFile('./dist/logo.svg', svg);
+    } else if (shapeData.shape == "square") {
+        const newShape = new square(
+            shapeData.characters,
+            shapeData.textColor,
+            shapeData.shapeColor,
+          );
+          const svg = newShape.renderSquare();
+          return writeFile('./dist/logo.svg', svg);
+    } else if (shapeData.shape == "triangle") {
+        const newShape = new triangle(
+            shapeData.characters,
+            shapeData.textColor,
+            shapeData.shapeColor,
+          );
+          const svg = newShape.renderTri();
+          return writeFile('./dist/logo.svg', svg);
+    }
+    
 
     // Use return with the writeFile method which returns a promise so that another .then() can be chained that will
     // wait for writeFile to resolve.
-    return writeFile('./dist/post.html', html);
+    
   })
   .then(() => {
     // This function will only run after the asynchronous call to writeFile has resolved.
-    console.log('Created post.html');
+    console.log('Created logo.svg');
   });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function circleSvg(text, textColor, shapeColor) {
-
-    var svgUpdate = "";
-
-svgUpdate+= '<svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg">\n';
-
-svgUpdate+= '<circle cx="150" cy="100" r="80" fill="'+ shapeColor + '" />\n';
-
-svgUpdate+= '<text x="150" y="125" font-size="60" text-anchor="middle" fill="' + textColor + '">' + text + '</text>\n';
-
-svgUpdate+= '</svg>';
-
-return svgUpdate;
-};
-
-function squareSvg(text, textColor, shapeColor) {
-
-    var svgUpdate = "";
-
-svgUpdate+= '<svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg">\n';
-
-svgUpdate+= '<rect x="50" y="0" width="200" height="200" fill="'+ shapeColor + '" />\n';
-
-svgUpdate+= '<text x="150" y="125" font-size="60" text-anchor="middle" fill="' + textColor + '">' + text + '</text>\n';
-
-svgUpdate+= '</svg>';
-
-return svgUpdate;
-};
-
-function triangleSvg(text, textColor, shapeColor) {
-
-    var svgUpdate = "";
-
-svgUpdate+= '<svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg">\n';
-
-svgUpdate+= '<polygon points="150,0 0,200 300,200" class="triangle" fill="'+ shapeColor + '" />\n';
-
-svgUpdate+= '<text x="100" y="150" font-size="60" text-anchor="middle" fill="' + textColor + '">' + text + '</text>\n';
-
-svgUpdate+= '</svg>';
-
-return svgUpdate;
-};
-
-// console.log(svg("x","y","z"));
-
-
-  
+});
