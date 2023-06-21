@@ -1,6 +1,15 @@
 {
-	"characters": "GHG",
-	"textColor": "purple",
-	"shape": "square",
-	"shapeColor": "pink"
-}
+    "name": "module_10",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "test": "jest shapes.test.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+      "jest": "^24.9.0"
+    }
+  }
+  

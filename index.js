@@ -29,13 +29,13 @@ inquirer
   ])
   .then((data) => {
 
-    fs.writeFile("package.json", JSON.stringify(data, null, '\t'), (err) =>
+    fs.writeFile("./lib/data.json", JSON.stringify(data, null, '\t'), (err) =>
     err ? console.log(err) : console.log('Success!')
   );
   })
 
   .then(() => {
-    readFile('./package.json', 'utf-8')
+    readFile('./lib/data.json', 'utf-8')
 .then((json) => {
     const shapeData = JSON.parse(json);
     // console.log(shapeData);
@@ -46,7 +46,7 @@ inquirer
       shapeData.textColor,
       shapeData.shapeColor,
     );
-    const svg = newShape.renderCirc();
+    const svg = '<svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg">\n' + newShape.renderCirc() + newShape.renderText() + "</svg>";
     return writeFile('./dist/logo.svg', svg);
     } else if (shapeData.shape == "square") {
         const newShape = new square(
@@ -54,7 +54,7 @@ inquirer
             shapeData.textColor,
             shapeData.shapeColor,
           );
-          const svg = newShape.renderSquare();
+          const svg = '<svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg">\n' + newShape.renderSquare() + newShape.renderText() + "</svg>";
           return writeFile('./dist/logo.svg', svg);
     } else if (shapeData.shape == "triangle") {
         const newShape = new triangle(
@@ -62,17 +62,14 @@ inquirer
             shapeData.textColor,
             shapeData.shapeColor,
           );
-          const svg = newShape.renderTri();
+          const svg = '<svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg">\n' + newShape.renderTri() + newShape.renderText() + "</svg>";
           return writeFile('./dist/logo.svg', svg);
     }
     
 
-    // Use return with the writeFile method which returns a promise so that another .then() can be chained that will
-    // wait for writeFile to resolve.
     
   })
   .then(() => {
-    // This function will only run after the asynchronous call to writeFile has resolved.
     console.log('Created logo.svg');
   });
 });
