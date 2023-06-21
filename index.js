@@ -28,18 +28,21 @@ inquirer
     },
   ])
   .then((data) => {
-
+//sends data to json file
     fs.writeFile("./lib/data.json", JSON.stringify(data, null, '\t'), (err) =>
     err ? console.log(err) : console.log('Success!')
   );
   })
 
+  //retrieves data from json file
   .then(() => {
     readFile('./lib/data.json', 'utf-8')
 .then((json) => {
     const shapeData = JSON.parse(json);
     // console.log(shapeData);
 
+    //selects appropriate shape class depending on user input
+    //creates svg file with user data
     if (shapeData.shape == "circle") {
         const newShape = new circle(
       shapeData.characters,
